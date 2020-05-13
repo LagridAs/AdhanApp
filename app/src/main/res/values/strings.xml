@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">AdhanApp</string>
+    <string name="notification_activity">NotificationActivity</string>
+    <string name="fajr">الفجر</string>
+    <string name="اsobh">الصبح</string>
+    <string name="اdohr">الظهر</string>
+    <string name="اasr">العصر</string>
+    <string name="maghrib">المغرب</string>
+    <string name="ichaa">العشاء</string>
+    <string name="mawakitة">مواقيت الصلاة</string>
+</resources>

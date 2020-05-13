@@ -1,0 +1,2 @@
+rootProject.name='AdhanApp'
+include ':app'
