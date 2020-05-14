@@ -14,6 +14,12 @@ import java.util.*
 class HoraireJobService: JobService() {
     val interf= MainActivity() as HoraireInterface
     override fun onStopJob(params: JobParameters?): Boolean {
+        val broadcastIntent= Intent()
+        val lat = params!!.extras!!.getDouble("lat")
+        val lon = params!!.extras!!.getDouble("lon")
+        broadcastIntent.putExtra("lat",lat)
+        broadcastIntent.putExtra("lon",lon)
+        sendBroadcast(broadcastIntent)
         return false
     }
 
@@ -21,9 +27,11 @@ class HoraireJobService: JobService() {
         Timer().scheduleAtFixedRate(object : TimerTask() {
             @RequiresApi(Build.VERSION_CODES.O)
             override fun run() {
-                Log.e("NIlu_TAG","Hello World")
-                val loc: Location? =interf.getLastLocation()
-                val salatList = interf.getHoraireSalat(loc!!.altitude, loc.longitude)
+                Log.e("Null_TAG","Hello World")
+                val lat = params!!.extras!!.getDouble("lat")
+                val lon = params!!.extras!!.getDouble("lon")
+
+                val salatList = interf.getHoraireSalat(lat, lon)
                 val currentDateTime = LocalTime.now()
                 for(item in salatList){
                     if ((LocalTime.parse(item.time))==currentDateTime){
