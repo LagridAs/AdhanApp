@@ -1,121 +1,224 @@
 package com.example.adhanapp
 
 import android.Manifest
+import android.annotation.SuppressLint
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.app.job.JobInfo
 import android.content.ComponentName
 import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
+import android.os.Build
 import android.os.Bundle
 import android.os.PersistableBundle
+import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import com.azan.Azan
 import com.azan.Method
 import com.azan.astrologicalCalc.SimpleDate
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
+private const val PERMISSION_REQUEST = 10
 
-class MainActivity : AppCompatActivity(),HoraireInterface {
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private val PERMISSION_CODE: Int = 1000
-    var lat:Double?=null
-    var long:Double?=null
-    var brReceiver:BroadcastRec?=null
+class MainActivity : AppCompatActivity() {
+    /****************initialisation***************/
+    lateinit var locationManager: LocationManager
+    private var hasGps = false
+    private var hasNetwork = false
+    private var locationGps: android.location.Location? = null
+    private var locationNetwork: android.location.Location? = null
+    private var location: android.location.Location? = null
+    private var permissions = arrayOf(
+        Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.ACCESS_COARSE_LOCATION
+    )
+
+    /******* initialisation des données d'oran ***********/
+    var today = SimpleDate(GregorianCalendar())
+    var adhanLocation = com.azan.astrologicalCalc.Location(35.6976541, -0.6337376, 1.0, 0)
+    var azan = Azan(adhanLocation, Method.MUSLIM_LEAGUE)
+    var prayerTimes = azan.getPrayerTimes(today)
+
+
+    /*******************************/
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-            Log.d(ContentValues.TAG,"fel on create")
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-            != PackageManager.PERMISSION_GRANTED) {
-            val permission = arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION)
-            requestPermissions(permission, PERMISSION_CODE)
-        }else {
 
-            fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-
-            fusedLocationClient.lastLocation
-                .addOnSuccessListener { location : Location ->
-                    val loc = location
-                    lat=loc.latitude
-                    long=loc.altitude
-                    Log.d(ContentValues.TAG,"latitude"+ lat)
-                    val componentName =
-                        ComponentName(this, HoraireJobService::class.java)
-
-                    val bundle = PersistableBundle()
-                    bundle.putDouble("lat", lat!!)
-                    bundle.putDouble("lon", long!!)
-
-                    val jobInfo = JobInfo.Builder(0, componentName)
-                        .setExtras(bundle)
-                        .setOverrideDeadline(0)
-                        .setMinimumLatency(1 * 1000)
-                        .setPersisted(true)
-                        .build()
-                    Log.d(ContentValues.TAG,"appel au brReceiver")
-
-                    brReceiver= BroadcastRec()
-                    brReceiver!!.scheduleJob(applicationContext,jobInfo)
-
-                    val listSalat= getHoraireSalat(loc.latitude,loc.altitude)
-                    val td = SimpleDate(GregorianCalendar())
-                    dateAu.text = td.day.toString().plus("/").plus(td.month.toString()).plus(td.year.toString())
-                    Imsaak.text= listSalat[1].name.plus(" ").plus(listSalat[1].time)
-                    Fajr.text= listSalat[2].name.plus(" ").plus(listSalat[2].time)
-                    Sobh.text= listSalat[3].name.plus(" ").plus(listSalat[3].time)
-                    Dohr.text= listSalat[4].name.plus(" ").plus(listSalat[4].time)
-                    Asr.text= listSalat[5].name.plus(" ").plus(listSalat[5].time)
-                    Maghrib.text= listSalat[6].name.plus(" ").plus(listSalat[6].time)
-                    Ishaa.text= listSalat[7].name.plus(" ").plus(listSalat[7].time)
-                    Log.d(ContentValues.TAG,"liste remplit")
-
-                }
-        }
-
-
-    }
-
-
-
-
-    override fun getHoraireSalat(lat:Double, lon:Double):ArrayList<Horaire>{
-        val  HoraireArrayList:ArrayList<Horaire> = arrayListOf()
-        val today = SimpleDate(GregorianCalendar())
-        val location = com.azan.astrologicalCalc.Location(lat,lon,1.0,0)
-        val azan = Azan(location, Method.EGYPT_SURVEY)
-        val prayerTimes = azan.getPrayerTimes(today)
-        val imsaak = azan.getImsaak(today)
-        HoraireArrayList.add(Horaire("Imsaak","$imsaak"))
-        HoraireArrayList.add(Horaire("Fajr",prayerTimes.fajr().toString()))
-        HoraireArrayList.add(Horaire("Sobh",prayerTimes.shuruq().toString()))
-        HoraireArrayList.add(Horaire("Dohr",prayerTimes.thuhr().toString()))
-        HoraireArrayList.add(Horaire("Asr",prayerTimes.assr().toString()))
-        HoraireArrayList.add(Horaire("Maghrib",prayerTimes.maghrib().toString()))
-        HoraireArrayList.add(Horaire("Ishaa",prayerTimes.ishaa().toString()))
-        return HoraireArrayList
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int,
-                                            permissions: Array<String>, grantResults: IntArray) {
-        when (requestCode) {
-            PERMISSION_CODE -> {
-                // If request is cancelled, the result arrays are empty.
-                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-
-                } else {
-                    Toast.makeText(this, "Vous ne disposez pas des permissions necessaires", Toast.LENGTH_SHORT)
-                }
-                return
+        /*********************** mettre a jour la localication**********************/
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkPermission(permissions)) {
+                updateLocation()
+            } else {
+                requestPermissions(permissions, PERMISSION_REQUEST)
             }
+        } else {
+            updateLocation()
         }
+
+        /********************les horaires de salat a oran**************************/
+        dateText.text = "" + today.day + " / " + today.month + " / " + today.year
+        fajrText.text = formatTime(prayerTimes.fajr().toString())
+        sobhText.text = formatTime(prayerTimes.shuruq().toString())
+        dohrText.text = formatTime(prayerTimes.thuhr().toString())
+        asrText.text = formatTime(prayerTimes.assr().toString())
+        maghribText.text = formatTime(prayerTimes.maghrib().toString())
+        ishaaText.text = formatTime(prayerTimes.ishaa().toString())
+
+
+        /********* Createation du channal de notification  ************/
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = "Adhan"
+            val descriptionText = "Adhan"
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel("MyChannel", name, importance).apply {
+                description = descriptionText
+            }
+            // Register the channel with the system
+            val notificationManager: NotificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+
+        /******************* lancement du JobService ******************/
+        val componentName =
+            ComponentName(this, HoraireJobService::class.java)
+        val adhanTimes = HoraireSalat(
+            formatTime(prayerTimes.fajr().toString()),
+            formatTime(prayerTimes.shuruq().toString()),
+            formatTime(prayerTimes.thuhr().toString()),
+            formatTime(prayerTimes.assr().toString()),
+            formatTime(prayerTimes.maghrib().toString()),
+            formatTime(prayerTimes.ishaa().toString())
+        )
+        /********************passer les horaires de salat au JobService************************/
+        val g = Gson()
+        val jsonString: String = g.toJson(adhanTimes)
+        val bundle = PersistableBundle()
+        bundle.putString("adhanTimes",jsonString)
+        Log.d(ContentValues.TAG,jsonString)
+        val autoStart = AutoStart()
+
+        val jobInfo = JobInfo.Builder(0, componentName)
+            .setExtras(bundle)
+            .setOverrideDeadline(0)
+            .setMinimumLatency(1 * 1000)
+            .setPersisted(true)
+            .build()
+        autoStart.scheduleJob(this,jobInfo)
+    }
+    private fun updateAdhanTimes(date: SimpleDate, lat: Double, lon: Double){
+        adhanLocation = com.azan.astrologicalCalc.Location(lat, lon, 1.0, 0)
+        azan = Azan(adhanLocation, Method.MUSLIM_LEAGUE)
+        prayerTimes = azan.getPrayerTimes(date)
+    }
+
+    private fun checkPermission(permissionArray: Array<String>): Boolean {
+        var allSuccess = true
+        for (i in permissionArray.indices) {
+            if (checkCallingOrSelfPermission(permissionArray[i]) == PackageManager.PERMISSION_DENIED)
+                allSuccess = false
+        }
+        return allSuccess
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun updateLocation() {
+        var location: android.location.Location? = location
+        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        hasGps = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+        hasNetwork = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+        if (hasGps || hasNetwork) {
+
+            if (hasGps) {
+                locationManager.requestLocationUpdates(
+                    LocationManager.GPS_PROVIDER,
+                    5000,
+                    0F,
+                    object : LocationListener {
+
+                        override fun onLocationChanged(location: android.location.Location?) {
+                            if (location != null) {
+                                locationGps = location
+                            }
+                        }
+                        override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
+                        override fun onProviderEnabled(provider: String?) {}
+                        override fun onProviderDisabled(provider: String?) {}
+                    })
+
+                val localGpsLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+                if (localGpsLocation != null)
+                    locationGps = localGpsLocation
+            }
+            if (hasNetwork) {
+                locationManager.requestLocationUpdates(
+                    LocationManager.NETWORK_PROVIDER,
+                    5000,
+                    0F,
+                    object : LocationListener {
+                        override fun onLocationChanged(location: android.location.Location?) {
+                            if (location != null) {
+                                locationNetwork = location
+                            }
+                        }
+                        override fun onStatusChanged(provider: String?, status: Int,extras: Bundle?) {}
+                        override fun onProviderEnabled(provider: String?) {}
+                        override fun onProviderDisabled(provider: String?) {}
+                    })
+
+                val localNetworkLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+                if (localNetworkLocation != null)
+                    locationNetwork = localNetworkLocation
+            }
+
+            if (locationGps != null && locationNetwork != null) {
+                if (locationGps!!.accuracy > locationNetwork!!.accuracy) {
+                    location = locationNetwork
+                    updateAdhanTimes(SimpleDate(GregorianCalendar()), location!!.latitude, location!!.longitude)
+                } else {
+                    location = locationGps
+                    updateAdhanTimes(SimpleDate(GregorianCalendar()), location!!.latitude, location!!.longitude)
+                }
+            }
+        } else {
+            startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == PERMISSION_REQUEST) {
+            var allSuccess = true
+            for (i in permissions.indices) {
+                if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
+                    allSuccess = false
+                    val requestAgain = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && shouldShowRequestPermissionRationale(permissions[i])
+                    if (requestAgain) {
+                        Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this, "Go to settings and enable the permission", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+            if (allSuccess)
+                updateLocation()
+        }
+    }
+
+    private fun formatTime(time: String): String{
+        val timeArray = time.split(":")
+        return timeArray[0]+":"+timeArray[1]
     }
 
 }

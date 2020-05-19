@@ -12,25 +12,22 @@ import android.os.PersistableBundle
 import android.util.Log
 import androidx.annotation.RequiresApi
 
-class BroadcastRec: BroadcastReceiver() {
+class AutoStart: BroadcastReceiver() {
+    val restartService = "restart.adhan"
+
     override fun onReceive(context: Context?, intent: Intent?) {
         if (context != null) {
-            val lat = intent!!.extras!!.getDouble("lat")
-            val lon = intent!!.extras!!.getDouble("lon")
-            val componentName =
-                ComponentName(context, HoraireJobService::class.java)
-
-            val bundle = PersistableBundle()
-            bundle.putDouble("lat", lat)
-            bundle.putDouble("lon", lon)
-
-            val jobInfo = JobInfo.Builder(0, componentName)
-                .setExtras(bundle)
-                .setOverrideDeadline(0)
-                .setMinimumLatency(1 * 1000)
-                .setPersisted(true)
-                .build()
-            scheduleJob(context,jobInfo)
+            Log.i("restarted", "phone restarted successfully")
+            if (intent?.action.equals(restartService) || intent?.action.equals(Intent.ACTION_BOOT_COMPLETED)){
+                val componentName =
+                    ComponentName(context, HoraireJobService::class.java)
+                val jobInfo = JobInfo.Builder(0, componentName)
+                    .setOverrideDeadline(0)
+                    .setMinimumLatency(1 * 1000)
+                    .setPersisted(true)
+                    .build()
+                scheduleJob(context,jobInfo)
+            }
         }
     }
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)

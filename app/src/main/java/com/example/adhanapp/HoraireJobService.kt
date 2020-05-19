@@ -1,50 +1,81 @@
 package com.example.adhanapp
 
+import android.annotation.SuppressLint
 import android.app.job.JobParameters
 import android.app.job.JobService
+import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
-import android.location.Location
-import android.os.Build
+import android.net.Uri
 import android.util.Log
-import androidx.annotation.RequiresApi
-import java.time.LocalTime
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import com.google.gson.Gson
+import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.concurrent.fixedRateTimer
 
 
 class HoraireJobService: JobService() {
-    val interf= MainActivity() as HoraireInterface
     override fun onStopJob(params: JobParameters?): Boolean {
-        val broadcastIntent= Intent()
-        val lat = params!!.extras!!.getDouble("lat")
-        val lon = params!!.extras!!.getDouble("lon")
-        broadcastIntent.putExtra("lat",lat)
-        broadcastIntent.putExtra("lon",lon)
-        sendBroadcast(broadcastIntent)
+        /*********************envoie de Broadcast en cas d'arret du service par le systeme *********************/
+        val RESTART_SERVICE = "restart.adhan"
+        val i = Intent()
+        i.action = RESTART_SERVICE
+        i.setClass(this, AutoStart::class.java)
+        this.sendBroadcast(i)
         return false
     }
 
+    @SuppressLint("SimpleDateFormat")
     override fun onStartJob(params: JobParameters?): Boolean {
-        Timer().scheduleAtFixedRate(object : TimerTask() {
-            @RequiresApi(Build.VERSION_CODES.O)
-            override fun run() {
-                Log.e("Null_TAG","Hello World")
-                val lat = params!!.extras!!.getDouble("lat")
-                val lon = params!!.extras!!.getDouble("lon")
+        /*******************recuperation des horaires de salat*************************/
+        val json = params!!.extras.getString("adhanTimes")
+        Log.d(ContentValues.TAG, "json"+ json)
 
-                val salatList = interf.getHoraireSalat(lat, lon)
-                val currentDateTime = LocalTime.now()
-                for(item in salatList){
-                    if ((LocalTime.parse(item.time))==currentDateTime){
-                        val service = Intent(baseContext, NotificationService::class.java)
-                        service.putExtra("salat",item)
-                        startService(service)
-                    }
-                }
+        val g = Gson()
+        val adhanTimes: HoraireSalat = g.fromJson(json, HoraireSalat::class.java)
+        Log.d(ContentValues.TAG, adhanTimes.toString())
 
+        val sdf = SimpleDateFormat("HH:mm")
+        var timeNow : String
+        val context = this
+        /**************envoie de notification lorsque l'heure de salat arrive******************/
+        fixedRateTimer("timer",false,0,1000*30){
+            timeNow = sdf.format(Date())
+            Log.i("", timeNow)
+
+            if (timeNow == formatTime(adhanTimes.fajr)){
+                playNotification(context, "الصبح")
+            }else if (timeNow == formatTime(adhanTimes.dohr)){
+                playNotification(context, "الظهر")
+            }else if (timeNow == formatTime(adhanTimes.asr)){
+                playNotification(context, "العصر")
+            }else if (timeNow == formatTime(adhanTimes.maghrib)){
+                playNotification(context, "المغرب")
+            }else if (timeNow == formatTime(adhanTimes.isha)){
+                playNotification(context, "العشاء")
             }
-        },60000,2)
+        }
 
         return true
+    }
+    private fun playNotification(context: Context, adhan: String){
+        var builder = NotificationCompat.Builder(context, "MyChannel")
+            .setSmallIcon(R.mipmap.ic_launcher)
+            .setContentTitle(adhan)
+            .setContentText("حان الآن موعد أذان " + adhan)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setSound(Uri.parse("android.resource://com.example.adhanapp/" + R.raw.adhan))
+
+        with(NotificationManagerCompat.from(context)) {
+            // notificationId is a unique int for each notification that you must define
+            notify((Math.random()*1000).toInt(), builder.build())
+        }
+    }
+    private fun formatTime(time: String): String{
+        val timeArray = time.split(":")
+        return timeArray[0]+":"+timeArray[1]
     }
 
 

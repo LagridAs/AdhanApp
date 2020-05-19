@@ -16,13 +16,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".NotificationActivity"
-            android:label="@string/notification_activity"
-            android:parentActivityName=".MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity"/>
-        </activity>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -33,15 +26,11 @@
         <service
             android:name=".HoraireJobService"
             android:label="Horaire service"
-            android:permission="android.permission.BIND_JOB_SERVICE" >
-        </service>
-        <service
-            android:name=".NotificationService"
-            android:label="Notificaion service"
-            android:permission="android.permission.BIND_JOB_SERVICE" >
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:exported="true">
         </service>
         <receiver
-            android:name=".BroadcastRec"
+            android:name=".AutoStart"
             android:enabled="true"
             android:exported="true"
             android:label="StartMyServiceAtBootReceiver">

@@ -1,106 +1,199 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/dateAu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Date"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.224" />
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="20dp"
+        android:text="مواقيت الصلاة"
+        android:textAlignment="center"
+        android:textSize="30sp"
+        android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/Imsaak"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Imsaak"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.335" />
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="0dp"
+        android:text="التاريخ"
+        android:textAlignment="center"
+        android:textSize="30sp"
+        android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/Fajr"
+        android:id="@+id/dateText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Fajr"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/Imsaak"
-        app:layout_constraintVertical_bias="0.069" />
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:text=""
+        android:textAlignment="center"
+        android:textSize="30sp"
+        android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/Sobh"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Sobh"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Fajr"
-        app:layout_constraintVertical_bias="0.018" />
+        android:layout_margin="5dp"
+        android:layoutDirection="rtl"
+        android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/Dohr"
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="الفجر"
+            android:textAlignment="center"
+            android:textDirection="rtl"
+            android:textSize="22sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/fajrText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:textAlignment="center"
+            android:textSize="22sp" />
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Dhohr"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Sobh"
-        app:layout_constraintVertical_bias="0.04" />
+        android:layout_margin="5dp"
+        android:layoutDirection="rtl"
+        android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/Asr"
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="الشروق"
+            android:textAlignment="center"
+            android:textDirection="rtl"
+            android:textSize="22sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/sobhText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:textAlignment="center"
+            android:textSize="22sp" />
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Asr"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Dohr"
-        app:layout_constraintVertical_bias="0.061" />
+        android:layout_margin="5dp"
+        android:layoutDirection="rtl"
+        android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/Maghrib"
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="الظهر"
+            android:textAlignment="center"
+            android:textDirection="rtl"
+            android:textSize="22sp" />
+
+        <TextView
+            android:id="@+id/dohrText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:textAlignment="center"
+            android:textSize="22sp" />
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Maghrib"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Asr"
-        app:layout_constraintVertical_bias="0.05" />
+        android:layout_margin="5dp"
+        android:layoutDirection="rtl"
+        android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/Ishaa"
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="العصر"
+            android:textAlignment="center"
+            android:textDirection="rtl"
+            android:textSize="22sp" />
+
+        <TextView
+            android:id="@+id/asrText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:textAlignment="center"
+            android:textSize="22sp" />
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Ishaa"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Maghrib"
-        app:layout_constraintVertical_bias="0.059" />
+        android:layout_margin="5dp"
+        android:layoutDirection="rtl"
+        android:orientation="horizontal">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="المغرب"
+            android:textAlignment="center"
+            android:textDirection="rtl"
+            android:textSize="22sp" />
+
+        <TextView
+            android:id="@+id/maghribText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:textAlignment="center"
+            android:textSize="22sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:layoutDirection="rtl"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="العشاء"
+            android:textAlignment="center"
+            android:textDirection="rtl"
+            android:textSize="22sp" />
+
+        <TextView
+            android:id="@+id/ishaaText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:textAlignment="center"
+            android:textSize="22sp" />
+    </LinearLayout>
+
+</LinearLayout>
