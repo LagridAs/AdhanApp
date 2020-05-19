@@ -5,28 +5,31 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="#FFFFFF"
     tools:context=".MainActivity">
-
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="20dp"
-        android:text="مواقيت الصلاة"
-        android:textAlignment="center"
-        android:textSize="30sp"
-        android:textStyle="bold" />
+        android:layout_margin="10dp"
+        android:layoutDirection="rtl"
+        android:orientation="horizontal">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="0dp"
-        android:text="التاريخ"
-        android:textAlignment="center"
-        android:textSize="30sp"
-        android:textStyle="bold" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="0.4"
+            android:text="مواقيت الصلاة"
+            android:textAlignment="center"
+            android:textColor="#087457"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_religious"
+            android:scaleType="fitXY"/>
 
+    </LinearLayout>
     <TextView
         android:id="@+id/dateText"
         android:layout_width="match_parent"
@@ -35,7 +38,7 @@
         android:layout_marginBottom="10dp"
         android:text=""
         android:textAlignment="center"
-        android:textSize="30sp"
+        android:textSize="20sp"
         android:textStyle="bold" />
 
     <LinearLayout
@@ -44,15 +47,21 @@
         android:layout_margin="5dp"
         android:layoutDirection="rtl"
         android:orientation="horizontal">
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_adhan_call"
+            android:layout_weight="0.2"
+            />
 
         <TextView
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
+            android:layout_height="30dp"
+            android:layout_weight="0.4"
             android:text="الفجر"
             android:textAlignment="center"
             android:textDirection="rtl"
-            android:textSize="22sp"
+            android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -61,8 +70,8 @@
         <TextView
             android:id="@+id/fajrText"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
+            android:layout_height="30dp"
+            android:layout_weight="0.4"
             android:textAlignment="center"
             android:textSize="22sp" />
     </LinearLayout>
@@ -73,15 +82,22 @@
         android:layout_margin="5dp"
         android:layoutDirection="rtl"
         android:orientation="horizontal">
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_adhan_call"
+            android:layout_weight="0.2"
+
+            />
 
         <TextView
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
+            android:layout_height="30dp"
+            android:layout_weight="0.4"
             android:text="الشروق"
             android:textAlignment="center"
             android:textDirection="rtl"
-            android:textSize="22sp"
+            android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -90,8 +106,8 @@
         <TextView
             android:id="@+id/sobhText"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
+            android:layout_height="30dp"
+            android:layout_weight="0.4"
             android:textAlignment="center"
             android:textSize="22sp" />
     </LinearLayout>
@@ -102,21 +118,28 @@
         android:layout_margin="5dp"
         android:layoutDirection="rtl"
         android:orientation="horizontal">
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_adhan_call"
+            android:layout_weight="0.2"
+
+            />
 
         <TextView
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
+            android:layout_height="30dp"
+            android:layout_weight="0.4"
             android:text="الظهر"
             android:textAlignment="center"
             android:textDirection="rtl"
-            android:textSize="22sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/dohrText"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
+            android:layout_height="30dp"
+            android:layout_weight="0.4"
             android:textAlignment="center"
             android:textSize="22sp" />
     </LinearLayout>
@@ -127,21 +150,29 @@
         android:layout_margin="5dp"
         android:layoutDirection="rtl"
         android:orientation="horizontal">
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_adhan_call"
+            android:layout_weight="0.2"
+
+            />
 
         <TextView
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
+            android:layout_height="30dp"
+            android:layout_weight="0.4"
             android:text="العصر"
+            android:layout_gravity="center"
             android:textAlignment="center"
             android:textDirection="rtl"
-            android:textSize="22sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/asrText"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
+            android:layout_height="30dp"
+            android:layout_weight="0.4"
             android:textAlignment="center"
             android:textSize="22sp" />
     </LinearLayout>
@@ -152,21 +183,28 @@
         android:layout_margin="5dp"
         android:layoutDirection="rtl"
         android:orientation="horizontal">
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_adhan_call"
+            android:layout_weight="0.2"
+
+            />
 
         <TextView
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
+            android:layout_height="30dp"
+            android:layout_weight="0.4"
             android:text="المغرب"
             android:textAlignment="center"
             android:textDirection="rtl"
-            android:textSize="22sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/maghribText"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
+            android:layout_height="30dp"
+            android:layout_weight="0.4"
             android:textAlignment="center"
             android:textSize="22sp" />
     </LinearLayout>
@@ -177,11 +215,18 @@
         android:layout_margin="5dp"
         android:layoutDirection="rtl"
         android:orientation="horizontal">
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_adhan_call"
+            android:layout_weight="0.2"
+
+            />
 
         <TextView
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
+            android:layout_height="30dp"
+            android:layout_weight="0.4"
             android:text="العشاء"
             android:textAlignment="center"
             android:textDirection="rtl"
@@ -190,10 +235,18 @@
         <TextView
             android:id="@+id/ishaaText"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
+            android:layout_height="30dp"
+            android:layout_weight="0.4"
             android:textAlignment="center"
-            android:textSize="22sp" />
+            android:textSize="18sp" />
     </LinearLayout>
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_gravity="center"
+        android:src="@drawable/masjid"
+        android:scaleType="fitXY"/>
 
 </LinearLayout>

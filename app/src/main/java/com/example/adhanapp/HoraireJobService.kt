@@ -48,7 +48,7 @@ class HoraireJobService: JobService() {
             timeNow = sdf.format(Date())
             Log.i("", timeNow)
 
-            if (true){
+            if (timeNow == formatTime(adhanTimes.fajr)){
                 playNotification(context, "الصبح")
             }else if (timeNow == formatTime(adhanTimes.dohr)){
                 playNotification(context, "الظهر")
