@@ -27,7 +27,7 @@ class HoraireJobService: JobService() {
         return false
     }
 
-    @SuppressLint("SimpleDateFormat")
+    @SuppressLint("SimpleDateFormat", "CommitPrefEdits")
     override fun onStartJob(params: JobParameters?): Boolean {
         /*******************recuperation des horaires de salat*************************/
         val json = params!!.extras.getString("adhanTimes")
@@ -36,7 +36,10 @@ class HoraireJobService: JobService() {
         val g = Gson()
         val adhanTimes: HoraireSalat = g.fromJson(json, HoraireSalat::class.java)
         Log.d(ContentValues.TAG, adhanTimes.toString())
-
+        /*************enregistrer les horaires comme sharedPreferences****************/
+        if (json != null) {
+            saveAdhanTimes(json)
+        }
         val sdf = SimpleDateFormat("HH:mm")
         var timeNow : String
         val context = this
@@ -45,7 +48,7 @@ class HoraireJobService: JobService() {
             timeNow = sdf.format(Date())
             Log.i("", timeNow)
 
-            if (timeNow == formatTime(adhanTimes.fajr)){
+            if (true){
                 playNotification(context, "الصبح")
             }else if (timeNow == formatTime(adhanTimes.dohr)){
                 playNotification(context, "الظهر")
@@ -77,7 +80,16 @@ class HoraireJobService: JobService() {
         val timeArray = time.split(":")
         return timeArray[0]+":"+timeArray[1]
     }
-
+    private fun saveAdhanTimes(adhan: String)
+    {
+        val sharedPreferences = getSharedPreferences(
+            "adhanTimes",
+            Context.MODE_PRIVATE
+        )
+        val myEdit = sharedPreferences.edit()
+        myEdit.putString("adhanTimesPref",adhan)
+        myEdit.apply()
+    }
 
 
 }
