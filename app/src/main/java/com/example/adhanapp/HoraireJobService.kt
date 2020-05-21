@@ -6,6 +6,7 @@ import android.app.job.JobService
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
+import android.media.MediaPlayer
 import android.net.Uri
 import android.util.Log
 import androidx.core.app.NotificationCompat
@@ -48,7 +49,7 @@ class HoraireJobService: JobService() {
             timeNow = sdf.format(Date())
             Log.i("", timeNow)
 
-            if (timeNow == formatTime(adhanTimes.fajr)){
+            if (true){
                 playNotification(context, "الصبح")
             }else if (timeNow == formatTime(adhanTimes.dohr)){
                 playNotification(context, "الظهر")
@@ -65,7 +66,7 @@ class HoraireJobService: JobService() {
     }
     private fun playNotification(context: Context, adhan: String){
         var builder = NotificationCompat.Builder(context, "MyChannel")
-            .setSmallIcon(R.mipmap.ic_launcher)
+            .setSmallIcon(R.drawable.ic_adhan_call)
             .setContentTitle(adhan)
             .setContentText("حان الآن موعد أذان " + adhan)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
@@ -75,6 +76,8 @@ class HoraireJobService: JobService() {
             // notificationId is a unique int for each notification that you must define
             notify((Math.random()*1000).toInt(), builder.build())
         }
+        /*val player : MediaPlayer = MediaPlayer.create(context, R.raw.adhan)
+        player.start()*/
     }
     private fun formatTime(time: String): String{
         val timeArray = time.split(":")
